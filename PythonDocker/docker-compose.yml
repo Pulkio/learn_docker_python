@@ -1,0 +1,30 @@
+# Définir la version du fichier Docker Compose. La version '3' est utilisée pour 
+# les fonctionnalités de Docker Compose et la compatibilité avec Docker Engine.
+version: '3'
+
+# Définir les services qui composent l'application. Un service est un conteneur 
+# qui sera créé et géré par Docker Compose.
+services:
+  # Définir un service nommé 'python_app'. Le nom du service est utilisé pour 
+  # référencer ce conteneur dans les commandes Docker Compose et dans le réseau Docker.
+  python_app:
+    # Spécifier l'image Docker à utiliser pour ce service. Ici, nous utilisons 
+    # 'python_docker_project', une image que vous devez avoir construite au préalable.
+    image: python_docker_project
+    
+    # Définir les variables d'environnement pour ce service. 
+    # Ici, nous configurons la variable DISPLAY pour permettre à l'application 
+    # Tkinter d'afficher l'interface graphique sur le serveur X11.
+    environment:
+      - DISPLAY=host.docker.internal:0
+    
+    # Monter un volume pour permettre au conteneur d'accéder au socket X11 
+    # de l'hôte. Cela permet aux applications graphiques à l'intérieur du 
+    # conteneur d'afficher des fenêtres sur l'écran de l'hôte.
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+
+    # Spécifier la commande à exécuter lorsque le conteneur démarre. 
+    # Ici, nous exécutons le script Python 'app/app.py' pour démarrer 
+    # l'application graphique Tkinter.
+    command: python app/app.py
